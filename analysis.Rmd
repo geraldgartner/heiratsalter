@@ -1,0 +1,71 @@
+---
+title: "template"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Package setup
+
+```{r}
+library(ggthemes)
+library(ggThemeAssist)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(git2r)
+library(formatR)
+library(scales)
+library(grid)
+library(extrafont)
+library(animation)
+library(googlesheets)
+library(foreign)
+suppressPackageStartupMessages(library("dplyr"))
+```
+
+## dStd.at-Style
+```{r}
+theme <- theme(plot.background = element_rect(fill = "gray97"), panel.grid.major = element_line(colour = "gray86", linetype = "dotted"), 
+               panel.grid.minor = element_line(colour = "gray86", linetype = "dotted")) + 
+  theme(plot.title = element_text(size = 18, face = "bold"), 
+        plot.background = element_rect(fill = "gray97", colour = "antiquewhite", size = 10, linetype = "solid")) +
+  theme(axis.ticks = element_blank(), 
+        axis.line = element_blank(),
+        axis.title = element_text(vjust = 8), 
+        panel.background = element_rect(fill = "grey97", linetype = "solid"), 
+        plot.background = element_rect(colour = "gray97"), 
+        plot.title = element_text(hjust=0, margin=unit(c(0,1,0.2,1), "cm")), 
+        plot.margin = unit(c(1,0.5,0.5,0.5), "cm")) +
+  theme(axis.text=element_text(size=14))  
+```
+
+## Laden der Daten über Google Spreadsheets
+
+```{r}
+(my_sheets <- gs_ls())
+data <- gs_key('1AvWZDrBZYquk0bb1a7FKPNWDipPbzUTvwIpDMLYUryg')
+
+#Alle Worksheets aus dem GSheet Gemeindedaten importieren
+
+alterbildung <- gs_read(data, ws = 'alter_bildung_nochnieverheiratet', col_names = TRUE)
+altergeburtsland <- gs_read(data, ws = "alter_geburtsland_nochnieverheiratet", col_names = TRUE)
+erstheirathistorisch <- gs_read(data, ws = "erstheiraten_alter_historisch", col_names = TRUE)
+erstheiratsrategemklasse <- gs_read(data, ws = 'alter_erstheiratsrate', col_names = TRUE)
+altergemklasse <- gs_read(data, ws = "alter_gemeindegroesse_nochnieverheiratet", col_names = TRUE)
+alter_relativeheiratsrate <- gs_read(data, ws = "alter_relativeerstheiratsrate", col_names = TRUE)
+```
+
+#Laden des EVS lokal, weil ein wenig groß
+```{r}
+#evs <- read.dta("/Users/gerald/Downloads/evs_integrated_until_2008-1.dta")
+```
+
+#Säubern der Daten 
+```{r}
+alter_relativeheiratsrate <- alter_relativeheiratsrate %>% gather(typ, rate, alle:typ2000)
+erstheiratsrategemklasse <- erstheiratsrategemklasse %>% gather(typ, rate, alle:typ2000)
+#erstheirathistorisch <- erstheirathistorisch %>% gather(alter, rate, "18 Jahre":"80+")
+```
