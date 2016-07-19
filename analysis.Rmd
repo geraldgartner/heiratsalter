@@ -56,6 +56,11 @@ erstheirathistorisch <- gs_read(data, ws = "erstheiraten_alter_historisch", col_
 erstheiratsrategemklasse <- gs_read(data, ws = 'alter_erstheiratsrate', col_names = TRUE)
 altergemklasse <- gs_read(data, ws = "alter_gemeindegroesse_nochnieverheiratet", col_names = TRUE)
 alter_relativeheiratsrate <- gs_read(data, ws = "alter_relativeerstheiratsrate", col_names = TRUE)
+alter_bevoelkerung_historisch <- gs_read(data, ws = "alter_bevoelkerung_historisch", col_names = TRUE)
+alter_erstheiratsrate <- gs_read(data, ws = "alter_erstheiratsrate", col_names = TRUE)
+altersunterschiede_historisch <- gs_read(data, ws = "altersunterschiede_historisch", col_names = TRUE)
+wievielteehe_historisch <- gs_read(data, ws = "wievielteehe_historisch", col_names = TRUE)
+eingetragene_vs_eheschließungen <- gs_read(data, ws = "eingetragene_vs_eheschließungen", col_names = TRUE)
 ```
 
 #Laden des EVS lokal, weil ein wenig groß
@@ -67,5 +72,23 @@ alter_relativeheiratsrate <- gs_read(data, ws = "alter_relativeerstheiratsrate",
 ```{r}
 alter_relativeheiratsrate <- alter_relativeheiratsrate %>% gather(typ, rate, alle:typ2000)
 erstheiratsrategemklasse <- erstheiratsrategemklasse %>% gather(typ, rate, alle:typ2000)
+alterbildung <- alterbildung %>% gather(bildung, anzahl, Pflichtschule:Hochschule und Akademie)
+alter_bevoelkerung_historisch <- alter_bevoelkerung_historisch %>% gather(alter, anzahl, "19_Jahre":"18_Jahre"")
 #erstheirathistorisch <- erstheirathistorisch %>% gather(alter, rate, "18 Jahre":"80+")
+
 ```
+
+#Ein Waffle-Chart für Print für Verhältnisse 
+```{r}
+library(waffle)
+#für 2008
+parts <- c(30, 70)
+chart <- waffle(parts, rows=10)
+print(chart)
+
+#für 1990
+parts <- c(12, 88)
+chart <- waffle(parts, rows=10)
+print(chart)
+```
+
